@@ -1,20 +1,12 @@
 require("dotenv").config()
 const { Router } = require("express")
 const axios = require("axios")
-const { Configuration, OpenAIApi } = require("openai")
 
 const router = Router()
 const PATH = "https://script.google.com/macros/s/AKfycbytZRBcqeVArhoPTGtNySfWtaIBlQNAlSP3vXFOodq6IHPEVaq2tERV1m12KeUWnBcsng/exec"
 // const PATH = "http://localhost:3001/"
 
 router.get("/", (req, res) => {
-    // const respuesta = axios.get("https://jsonplaceholder.typicode.com/posts/1")
-    //     .then(response => {
-    //         console.log(response.data)
-    //     })
-    //     .catch(error => {
-    //         console.error(error)
-    //     })
     res.send("Hola Mundo!\nTu estas en el manual de español de Linux. Bienvenido! ")
 })
 
@@ -30,7 +22,7 @@ router.post("/:comand", async (req, res) => {
         const respuesta = await axios.post(PATH, {
             sourceLanguage: 'en',
             targetLanguage: 'es',
-            text: "Hello world"
+            text: "Hello world\nI love this app"
           })
           .then(response => {
             return response.data;
