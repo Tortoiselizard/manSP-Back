@@ -10,6 +10,16 @@ router.get("/", (req, res) => {
     res.send("Hola Mundo!\nTu estas en el manual de español de Linux. Bienvenido! ")
 })
 
+router.post("/", async (req, res) => {
+
+    // try{
+    //     console.log(req.headers)
+    //     return res.status(200).send("esta es la ruta para cargar el archivo")
+    // } catch(error) {
+    //     return res.status(400).send(error.message)    
+    // }
+})
+
 router.get("/:comand", async (req, res) => {
     const { comand } = req.params
 
@@ -18,11 +28,12 @@ router.get("/:comand", async (req, res) => {
 
 router.post("/:comand", async (req, res) => {
     const { comand } = req.params
+    const {soruceLanguage, targetLanguage, text} = req.body
     try {
         const respuesta = await axios.post(PATH, {
-            sourceLanguage: 'en',
-            targetLanguage: 'es',
-            text: "Hello world\nI love this app"
+            soruceLanguage,
+            targetLanguage,
+            text
           })
           .then(response => {
             return response.data;
