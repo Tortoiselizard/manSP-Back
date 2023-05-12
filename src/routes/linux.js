@@ -11,13 +11,22 @@ router.get("/", (req, res) => {
 })
 
 router.post("/", async (req, res) => {
-
-    // try{
-    //     console.log(req.headers)
-    //     return res.status(200).send("esta es la ruta para cargar el archivo")
-    // } catch(error) {
-    //     return res.status(400).send(error.message)    
-    // }
+    const {soruceLanguage, targetLanguage, text} = req.body
+    try {
+        const respuesta = await axios.post(PATH, {
+            soruceLanguage,
+            targetLanguage,
+            text
+          })
+          .then(response => response.data)
+          .catch(error => {
+            console.error(error);
+          });
+        console.log(respuesta)
+        return res.status(200).send(respuesta)
+    } catch (error) {
+        return res.status(400).send(error)
+    }
 })
 
 router.get("/:comand", async (req, res) => {
