@@ -12,21 +12,22 @@ router.get("/", (req, res) => {
 
 router.post("/", async (req, res) => {
     const {soruceLanguage, targetLanguage, text} = req.body
-    try {
-        const respuesta = await axios.post(PATH, {
-            soruceLanguage,
-            targetLanguage,
-            text
-          })
-          .then(response => response.data)
-          .catch(error => {
-            console.error(error);
-          });
-        console.log(respuesta)
-        return res.status(200).send(respuesta)
-    } catch (error) {
-        return res.status(400).send(error)
-    }
+    // try {
+    //     const respuesta = await axios.post(PATH, {
+    //         soruceLanguage,
+    //         targetLanguage,
+    //         text
+    //       })
+    //       .then(response => response.data)
+    //       .catch(error => {
+    //         console.error(error);
+    //       });
+    //     console.log(respuesta)
+    //     return res.status(200).send(respuesta)
+    // } catch (error) {
+    //     return res.status(400).send(error)
+    // }
+    return res.status(200).send(req.body)
 })
 
 router.get("/:comand", async (req, res) => {
@@ -39,7 +40,7 @@ router.post("/:comand", async (req, res) => {
     const { comand } = req.params
     const {soruceLanguage, targetLanguage, text} = req.body
     try {
-        const respuesta = await axios.post(PATH, {
+        const response = await axios.post(PATH, {
             soruceLanguage,
             targetLanguage,
             text
@@ -50,7 +51,8 @@ router.post("/:comand", async (req, res) => {
           .catch(error => {
             console.error(error);
           });
-        return res.status(200).send(respuesta)
+        const stringTextTranslate = response.translateText.reduce((acc, cur) => acc+cur+"\n", "")
+        return res.status(200).send(stringTextTranslate)
     } catch (error) {
         return res.status(400).send(error)
     }
