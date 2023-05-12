@@ -4,10 +4,11 @@ const router = require("./routes/index")
 
 const server = express()
 
-server.use("/", (req, res, next) => {
+/*server.use("/", (req, res, next) => {
     console.log("Estamos pasando por este Middleware")
     next()
-})
+})*/
+
 server.use(express.json())
 server.use(morgan("dev"))
 
