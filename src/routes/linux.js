@@ -40,8 +40,8 @@ router.post("/:comand", async (req, res) => {
     const { comand } = req.params
     const {sourceLanguage, text} = req.body
     const targetLanguage = "es"
-    const correctedText = text.map(line => line.replaceAll("	", " "))
-    
+    // const correctedText = text.map(line => line.replaceAll("	", " "))
+    const correctedText = text
     try {
         const response = await axios.post(PATH, {
             sourceLanguage,
