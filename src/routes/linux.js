@@ -38,25 +38,26 @@ router.get("/:comand", async (req, res) => {
 
 router.post("/:comand", async (req, res) => {
     const { comand } = req.params
-    const {soruceLanguage, text} = req.body
+    const {sourceLanguage, text} = req.body
     const targetLanguage = "es"
-    const correctedText = text.replaceAll("	", " ")
+    const correctedText = text.map(line => line.replaceAll("	", " "))
+    
     try {
         const response = await axios.post(PATH, {
-            soruceLanguage,
+            sourceLanguage,
             targetLanguage,
             correctedText
           })
           .then(response => {
             return response.data;
           })
-          .catch(error => {
-            console.error(error);
-          });
-        const stringTextTranslate = response.translateText.reduce((acc, cur) => acc+cur+"\n", "")
+          .catch(err => ({
+            error: err.message
+          }));
+          const stringTextTranslate = response.translateText.reduce((acc, cur) => acc+cur+"\n", "")
         return res.status(200).send(stringTextTranslate)
     } catch (error) {
-        return res.status(400).send(error)
+        return res.status(400).send(error.message)
     }
 })
 
