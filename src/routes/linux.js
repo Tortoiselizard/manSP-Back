@@ -1,5 +1,6 @@
 require("dotenv").config()
 const { Router } = require("express")
+const { Command } = require("../db")
 const axios = require("axios")
 
 const router = Router()
@@ -11,7 +12,7 @@ router.get("/", (req, res) => {
 })
 
 router.post("/", async (req, res) => {
-    const {soruceLanguage, targetLanguage, text} = req.body
+    const { soruceLanguage, targetLanguage, text } = req.body
     // try {
     //     const respuesta = await axios.post(PATH, {
     //         soruceLanguage,
@@ -30,32 +31,40 @@ router.post("/", async (req, res) => {
     return res.status(200).send(req.body)
 })
 
-router.get("/:comand", async (req, res) => {
-    const { comand } = req.params
+router.get("/:command", async (req, res) => {
+    const { command } = req.params
 
-    res.send(`${comand}\nAquí se muestra la informaicón del comando ${comand}`)
+    res.send(`${command}\nAquí se muestra la informaicón del comando ${command}`)
 })
 
-router.post("/:comand", async (req, res) => {
-    const { comand } = req.params
-    const {sourceLanguage, text} = req.body
+router.post("/:command", async (req, res) => {
+    const { command } = req.params
+    const { sourceLanguage, text } = req.body
     const targetLanguage = "es"
     // const correctedText = text.map(line => line.replaceAll("	", " "))
+    console.log("Loading: command, sourceLanguage, targetLanguage, and text")
     const correctedText = text
     try {
         const response = await axios.post(PATH, {
             sourceLanguage,
             targetLanguage,
             correctedText
-          })
-          .then(response => {
-            return response.data;
-          })
-          .catch(err => ({
-            error: err.message
-          }));
-          const stringTextTranslate = response.translateText.reduce((acc, cur) => acc+cur+"\n", "")
-        return res.status(200).send(stringTextTranslate)
+        })
+            .then(response => {
+                return response.data;
+            })
+            .catch(err => ({
+                error: err.message
+            }));
+        console.log("getting response: ")
+        const stringTextTranslate = response.translateText.reduce((acc, cur) => acc + cur + "\n", "")
+        const newCommand = await Command.create({
+            name: command,
+            manual: "Linux",
+            text: stringTextTranslate,
+            webPage: "www.manual-linux.com"
+        })
+        return res.status(200).send(newCommand.text)
     } catch (error) {
         return res.status(400).send(error.message)
     }
