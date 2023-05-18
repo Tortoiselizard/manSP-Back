@@ -17,7 +17,7 @@ const Command = (database) => {
             allowNull: false
         },
         text: {
-            type: DataTypes.BLOB,
+            type: DataTypes.STRING.BINARY,
             allowNull: false
         },
         webPage: {
