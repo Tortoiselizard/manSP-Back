@@ -3,6 +3,6 @@ const {database} = require("./src/db")
 const port = 3001
 
 server.listen(port, async () => {
-    await database.sync({force:true})
+    await database.sync({alter:true})
     console.log(`Listening on port ${port}`)
 })
