@@ -9,12 +9,12 @@ const Manual = require("./models/Manual")
 
 const database = new Sequelize(`${DB_DEPLOY}`, {
     logging:false,
-    native: false,
-    dialectOptions: {
-        ssl: {
-            require: true
-        }
-    }
+    // native: false,
+    // dialectOptions: {
+    //     ssl: {
+    //         require: true
+    //     }
+    // }
 })
 
 Command(database)
