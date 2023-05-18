@@ -1,4 +1,6 @@
 require("dotenv").config()
+const fs = require("fs")
+const path = require("path")
 const { Router } = require("express")
 const { Command } = require("../db")
 const axios = require("axios")
@@ -32,9 +34,22 @@ router.post("/", async (req, res) => {
 })
 
 router.get("/:command", async (req, res) => {
-    const { command } = req.params
-
-    res.send(`${command}\nAquí se muestra la informaicón del comando ${command}`)
+    try {
+        const { command } = req.params
+        console.log("Searching ...")
+        const commandsDB = await Command.findOne({
+            where: {
+                name: command
+            }
+        })
+        if (!commandsDB) {
+            return res.status(200).send("Command not found")
+        }
+        console.log("Command found")
+        res.status(200).send(commandsDB.text.toString())
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
 })
 
 router.post("/:command", async (req, res) => {
@@ -56,15 +71,23 @@ router.post("/:command", async (req, res) => {
             .catch(err => ({
                 error: err.message
             }));
-        console.log("getting response: ")
+        console.log("Translating ...")
         const stringTextTranslate = response.translateText.reduce((acc, cur) => acc + cur + "\n", "")
+
+        // Crear archivo .txt
+        fs.writeFileSync(`./${command}.txt`, stringTextTranslate)
+
+        // Leer archivo .txt
+        // const data = fs.readFileSync(`./${command}.txt`, "utf8")
+
         const newCommand = await Command.create({
             name: command,
             manual: "Linux",
             text: stringTextTranslate,
             webPage: "www.manual-linux.com"
         })
-        return res.status(200).send(newCommand.text)
+        console.log("New command saved ")
+        return res.status(200).send(newCommand.text.toString())
     } catch (error) {
         return res.status(400).send(error.message)
     }
